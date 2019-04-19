@@ -16,7 +16,6 @@
         "discord-oauth"
     ],
     "require": {},
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Xwilarg\\Discord\\": "src/"
