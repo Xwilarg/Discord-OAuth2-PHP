@@ -1,0 +1,25 @@
+{
+    "name": "xwilarg/discord-oauth2-php",
+    "description": "PHP Library for Discord OAuth2",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Xwilarg",
+            "email": "xwilarg@yahoo.fr"
+        }
+    ],
+    "keywords": [
+        "oauth2",
+        "oauth2-client",
+        "discord",
+        "discord-oauth"
+    ],
+    "require": {},
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Xwilarg\\Discord\\": "src/"
+        }
+    }
+}
