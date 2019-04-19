@@ -10,7 +10,7 @@ $ composer require xwilarg/discord-oauth2-php
 ```
 
 ### How to use it ?
-At first you need to go in the [Discord developper page](https://discordapp.com/developers/applications/) and create a new application.<br/>
+At first you need to go in the [Discord developer page](https://discordapp.com/developers/applications/) and create a new application.<br/>
 Go in General Information and take your "client id" and "client secret", we will need them later.<br/>
 Then go in OAuth2, in "Redirects" press the "Add Redirect" button and enter your redirection URL here (the page when the user will be redirected once he is logged with Discord)
 
