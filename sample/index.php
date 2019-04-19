@@ -2,12 +2,14 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use Xwilarg\Discord\OAuth2;
+
 // Sample configuration file, contains the following strings:
 // clientId: Client ID of the application
 // secret: Secret of the application
 // url: The redirect URL (URL called after the user is logged in, must be registered in https://discordapp.com/developers/applications/[YourAppId]/oauth)
 $auth = json_decode(file_get_contents('token.json'), true);
-$oauth2 = new Xwilarg\Discord\OAuth2($auth["clientId"], $auth["secret"], $auth["url"]);
+$oauth2 = new OAuth2($auth["clientId"], $auth["secret"], $auth["url"]);
 
 if ($oauth2->isRedirected() === false) { // Did the client already logged in ?
     // The parameter can be a combination of the following: connections, email, identity or guilds
