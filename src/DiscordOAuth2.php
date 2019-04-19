@@ -17,8 +17,20 @@ class DiscordOAuth2 {
         return isset($_GET['code']);
     }
 
+    public function getCustomInformation($endpoint, $forceRefresh = false) {
+        return $this->getInformation($forceRefresh, $endpoint);
+    }
+
     public function getUserInformation($forceRefresh = false) {
         return $this->getInformation($forceRefresh, 'users/@me');
+    }
+
+    public function getConnectionsInformation($forceRefresh = false) {
+        return $this->getInformation($forceRefresh, 'users/@me/connections');
+    }
+
+    public function getGuildsInformation($forceRefresh = false) {
+        return $this->getInformation($forceRefresh, 'users/@me/guilds');
     }
 
     private function getInformation($forceRefresh, $endpoint) {
