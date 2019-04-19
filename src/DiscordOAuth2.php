@@ -7,10 +7,10 @@ class DiscordOAuth2 {
         session_start();
     }
 
-    public function startRedirection() {
+    public function startRedirection($scope) {
         $randomString = DiscordOAuth2::generateToken();
         $_SESSION['oauth2state'] = $randomString;
-        header('Location: https://discordapp.com/api/oauth2/authorize?client_id=' . $this->_clientId . '&redirect_uri=' . urlencode($this->_redirectUrl) . '&response_type=code&scope=identify' . "&state=" . $randomString);
+        header('Location: https://discordapp.com/api/oauth2/authorize?client_id=' . $this->_clientId . '&redirect_uri=' . urlencode($this->_redirectUrl) . '&response_type=code&scope=' . join('%20', $scope) . "&state=" . $randomString);
     }
 
     public function isRedirected() {
