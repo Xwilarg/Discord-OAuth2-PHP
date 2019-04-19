@@ -13,6 +13,42 @@ class DiscordOAuth2 {
         header('Location: https://discordapp.com/api/oauth2/authorize?client_id=' . $this->_clientId . '&redirect_uri=' . urlencode($this->_redirectUrl) . '&response_type=code&scope=identify' . "&state=" . $randomString);
     }
 
+    public function isRedirected() {
+        return isset($_GET['code']);
+    }
+
+    public function getInformation() {
+        if ($this->_accessToken === null) {
+            $this->loadToken();
+        }
+        $curl = curl_init('https://discordapp.com/api/v6/users/@me');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, "false");
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $this->_accessToken
+        ));
+        $response = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+        return $response;
+    }
+
+    private function loadToken() {
+        if (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+            unset($_SESSION['oauth2state']);
+            throw new Exception('Invalid state');
+        }
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://discordapp.com/api/v6/oauth2/token",
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "client_id=" . $this->_clientId . "&client_secret=" . $this->_secret . "&grant_type=authorization_code&code=" . $_GET['code'] . "&redirect_uri=" . urlencode($this->_redirectUrl),
+            CURLOPT_RETURNTRANSFER => "false"
+        ));
+        $response = curl_exec($curl);
+        $this->_accessToken = json_decode($response, true)['access_token'];
+        curl_close($curl);
+        return $response;
+    }
+
     private static function generateToken() {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLen = strlen($characters);
@@ -26,5 +62,6 @@ class DiscordOAuth2 {
     private $_clientId;
     private $_secret;
     private $_redirectUrl;
+    private $_accessToken = null;
 }
 ?>
