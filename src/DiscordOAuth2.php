@@ -17,11 +17,15 @@ class DiscordOAuth2 {
         return isset($_GET['code']);
     }
 
-    public function getInformation() {
-        if ($this->_accessToken === null) {
+    public function getUserInformation($forceRefresh = false) {
+        return $this->getInformation($forceRefresh, 'users/@me');
+    }
+
+    private function getInformation($forceRefresh, $endpoint) {
+        if ($forceRefresh === true || $this->_accessToken === null) {
             $this->loadToken();
         }
-        $curl = curl_init('https://discordapp.com/api/v6/users/@me');
+        $curl = curl_init('https://discordapp.com/api/v6/' . $endpoint);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, "false");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             'Authorization: Bearer ' . $this->_accessToken

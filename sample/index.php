@@ -11,11 +11,11 @@ $oauth2 = new DiscordOAuth2($auth["clientId"], $auth["secret"], $auth["url"]);
 if ($oauth2->isRedirected() === false) { // Did the client already logged in ?
     // The parameter can be a combination of the following: connections, email, identity, guilds
     // More information about it here: https://discordapp.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes
-    $oauth2->startRedirection(['identify']);
+    $oauth2->startRedirection(['identify', 'connections']);
 } else {
     try {
-        $answer = $oauth2->getInformation();
-        if ($answer["code"] === 0) {
+        $answer = $oauth2->getUserInformation();
+        if (array_key_exists("code", $answer)) {
             exit("An error occured: " . $answer["message"]);
         }
         echo "Welcome " . $answer["username"] . "#" . $answer["discriminator"];
