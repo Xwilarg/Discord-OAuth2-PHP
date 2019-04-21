@@ -17,25 +17,28 @@ class OAuth2 {
         return isset($_GET['code']);
     }
 
-    public function getCustomInformation($endpoint, $forceRefresh = false) {
-        return $this->getInformation($forceRefresh, $endpoint);
+    public function getCustomInformation($endpoint) {
+        return $this->getInformation($endpoint);
     }
 
-    public function getUserInformation($forceRefresh = false) {
-        return $this->getInformation($forceRefresh, 'users/@me');
+    public function getUserInformation() {
+        return $this->getInformation('users/@me');
     }
 
-    public function getConnectionsInformation($forceRefresh = false) {
-        return $this->getInformation($forceRefresh, 'users/@me/connections');
+    public function getConnectionsInformation() {
+        return $this->getInformation('users/@me/connections');
     }
 
-    public function getGuildsInformation($forceRefresh = false) {
-        return $this->getInformation($forceRefresh, 'users/@me/guilds');
+    public function getGuildsInformation() {
+        return $this->getInformation('users/@me/guilds');
     }
 
-    private function getInformation($forceRefresh, $endpoint) {
-        if ($forceRefresh === true || $this->_accessToken === null) {
-            $this->loadToken();
+    private function getInformation($endpoint) {
+        if ($this->_accessToken === null) {
+            $response = $this->loadToken();
+            if ($response !== true) {
+                return ["code" => 0, "message" => $response];
+            }
         }
         $curl = curl_init('https://discordapp.com/api/v6/' . $endpoint);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, "false");
@@ -47,10 +50,10 @@ class OAuth2 {
         return $response;
     }
 
-    private function loadToken() {
+    public function loadToken() {
         if (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
             unset($_SESSION['oauth2state']);
-            throw new Exception('Invalid state');
+            return 'Invalid state';
         }
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -59,10 +62,13 @@ class OAuth2 {
             CURLOPT_POSTFIELDS => "client_id=" . $this->_clientId . "&client_secret=" . $this->_secret . "&grant_type=authorization_code&code=" . $_GET['code'] . "&redirect_uri=" . urlencode($this->_redirectUrl),
             CURLOPT_RETURNTRANSFER => "false"
         ));
-        $response = curl_exec($curl);
-        $this->_accessToken = json_decode($response, true)['access_token'];
+        $response = json_decode(curl_exec($curl), true);
+        if (array_key_exists('error_description', $response)) {
+            return $response['error_description'];
+        }
+        $this->_accessToken = $response['access_token'];
         curl_close($curl);
-        return $response;
+        return true;
     }
 
     private static function generateToken() {

@@ -16,7 +16,14 @@ if ($oauth2->isRedirected() === false) { // Did the client already logged in ?
     // More information about it here: https://discordapp.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes
     $oauth2->startRedirection(['identify', 'connections']);
 } else {
-    try {
+    // If preload the token to see if everything happen without error
+    $ok = $oauth2->loadToken();
+    if ($ok !== true) {
+        // A common error can be to reload the page because the code returned by Discord would still be present in the URL
+        // If this happen, isRedirected will return true and we will come here with an invalid code
+        // So if there is a problem, we redirect the user to Discord authentification
+        $oauth2->startRedirection(['identify', 'connections']);
+    } else {
         // ---------- USER INFORMATION
         $answer = $oauth2->getUserInformation(); // Same as $oauth2->getCustomInformation('users/@me')
         if (array_key_exists("code", $answer)) {
@@ -35,8 +42,6 @@ if ($oauth2->isRedirected() === false) { // Did the client already logged in ?
                 echo $a["type"] . ': ' . $a["name"] . '<br/>';
             }
         }
-    } catch (Exception $e) {
-        exit("An error occured: " . $e->getMessage());
     }
 }
 ?>
