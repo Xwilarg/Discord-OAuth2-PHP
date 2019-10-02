@@ -4,7 +4,9 @@ class OAuth2 {
         $this->_clientId = $clientId;
         $this->_secret = $secret;
         $this->_redirectUrl = $redirectUrl;
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
     public function startRedirection($scope) {
