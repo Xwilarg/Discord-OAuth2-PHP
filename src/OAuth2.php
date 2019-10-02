@@ -65,6 +65,9 @@ class OAuth2 {
             CURLOPT_RETURNTRANSFER => "false"
         ));
         $response = json_decode(curl_exec($curl), true);
+        if ($response === null) {
+            return 'Invalid state';
+        }
         if (array_key_exists('error_description', $response)) {
             return $response['error_description'];
         }
