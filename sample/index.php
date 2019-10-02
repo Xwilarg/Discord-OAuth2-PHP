@@ -4,7 +4,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Xwilarg\Discord\OAuth2;
 
-// Sample configuration file, contains the following strings:
+// Sample JSON configuration file, contains the following fields:
 // clientId: Client ID of the application
 // secret: Secret of the application
 // url: The redirect URL (URL called after the user is logged in, must be registered in https://discordapp.com/developers/applications/[YourAppId]/oauth)
