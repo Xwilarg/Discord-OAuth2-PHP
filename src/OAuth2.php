@@ -53,7 +53,7 @@ class OAuth2 {
     }
 
     public function loadToken() {
-        if (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+        if (!isset($_SESSION['oauth2state']) || empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
             unset($_SESSION['oauth2state']);
             return 'Invalid state';
         }
