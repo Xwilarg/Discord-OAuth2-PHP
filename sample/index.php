@@ -12,11 +12,12 @@ $auth = json_decode(file_get_contents('token.json'), true);
 $oauth2 = new OAuth2($auth["clientId"], $auth["secret"], $auth["url"]);
 
 if ($oauth2->isRedirected() === false) { // Did the client already logged in ?
-    // The parameter can be a combination of the following: connections, email, identity or guilds
+    // The parameters can be a combination of the following: connections, email, identity or guilds
     // More information about it here: https://discordapp.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes
+    // The others parameters are not available with this library
     $oauth2->startRedirection(['identify', 'connections']);
 } else {
-    // If preload the token to see if everything happen without error
+    // We preload the token to see if everything happened without error
     $ok = $oauth2->loadToken();
     if ($ok !== true) {
         // A common error can be to reload the page because the code returned by Discord would still be present in the URL
