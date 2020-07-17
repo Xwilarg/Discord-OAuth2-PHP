@@ -12,7 +12,7 @@ class OAuth2 {
     public function startRedirection($scope) {
         $randomString = OAuth2::generateToken();
         $_SESSION['oauth2state'] = $randomString;
-        header('Location: https://discordapp.com/api/oauth2/authorize?client_id=' . $this->_clientId . '&redirect_uri=' . urlencode($this->_redirectUrl) . '&response_type=code&scope=' . join('%20', $scope) . "&state=" . $randomString);
+        header('Location: https://discord.com/api/oauth2/authorize?client_id=' . $this->_clientId . '&redirect_uri=' . urlencode($this->_redirectUrl) . '&response_type=code&scope=' . join('%20', $scope) . "&state=" . $randomString);
     }
 
     public function isRedirected() {
@@ -42,7 +42,7 @@ class OAuth2 {
                 return ["code" => 0, "message" => $response];
             }
         }
-        $curl = curl_init('https://discordapp.com/api/v6/' . $endpoint);
+        $curl = curl_init('https://discord.com/api/v6/' . $endpoint);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, "false");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             'Authorization: Bearer ' . $this->_accessToken
@@ -59,7 +59,7 @@ class OAuth2 {
         }
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://discordapp.com/api/v6/oauth2/token",
+            CURLOPT_URL => "https://discord.com/api/v6/oauth2/token",
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => "client_id=" . $this->_clientId . "&client_secret=" . $this->_secret . "&grant_type=authorization_code&code=" . $_GET['code'] . "&redirect_uri=" . urlencode($this->_redirectUrl),
             CURLOPT_RETURNTRANSFER => "false"
