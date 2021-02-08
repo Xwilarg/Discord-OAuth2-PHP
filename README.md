@@ -2,7 +2,13 @@
 
 Discord-OAuth2-PHP is a small PHP library to use Discord OAuth2.
 
-It doesn't intend to cover all the functionalities of Discord OAuth2 but rather to be lightweight (no dependencies!) and easy to use.<br/>
+It doesn't intend to cover all the functionalities of Discord OAuth2 but rather to be lightweight (only dependency is curl) and easy to use.<br/>
+
+### Dependency
+To use this library, you must first install curl-php
+```bash
+sudo apt-get install php-curl
+```
 
 ### How to install it ?
 ```bash
